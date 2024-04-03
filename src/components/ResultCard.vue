@@ -6,7 +6,8 @@ export default {
         title: String,
         original_title: String,
         language: String,
-        vote: Number
+        vote: Number,
+        imageUrl: String
     },
     data() {
         return {
@@ -19,6 +20,8 @@ export default {
 <template>
 
     <li class="result-card">
+        <img v-if="imageUrl !== null" :src="`${state.urlTitleImage}${imageUrl}`" :alt="`image of ${title}`">
+        <img v-else src="" alt="no-image-available">
         <div class="title">Titolo: {{ title }}</div>
         <div class="original-title">Titolo originale: {{ original_title }}</div>
         <div class="lang">Lingua:
