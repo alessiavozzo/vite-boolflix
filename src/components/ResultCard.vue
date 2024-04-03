@@ -11,9 +11,18 @@ export default {
     },
     data() {
         return {
-            state: state
+            state: state,
+            stars: 5
         }
     },
+    computed: {
+        fullStars() {
+            return Math.ceil(this.vote / 2)
+        },
+        emptyStars() {
+            return this.stars - this.fullStars
+        }
+    }
 }
 </script>
 
@@ -27,7 +36,12 @@ export default {
         <div class="lang">Lingua:
             <span class="lang-icon" :class="`lang-icon-${language}`"></span>
         </div>
-        <div class="vote">Voto: {{ vote }}</div>
+        <div class="vote">Voto: {{ vote }}/10</div>
+        <div class="star-rating">
+            <i class="fa-solid fa-star" v-for="starsNumber in fullStars"></i>
+            <i class="fa-regular fa-star" v-for="emptyStarsNumber in emptyStars"></i>
+        </div>
+
     </li>
 
 </template>
