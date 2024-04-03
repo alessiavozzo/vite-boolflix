@@ -18,14 +18,13 @@ export default {
 
 <template>
 
-    <li class="movie">
+    <li class="result-card">
         <div class="title">Titolo: {{ title }}</div>
         <div class="original-title">Titolo originale: {{ original_title }}</div>
         <div class="lang">Lingua:
             <span class="lang-icon" :class="`lang-icon-${language}`"></span>
         </div>
         <div class="vote">Voto: {{ vote }}</div>
-
     </li>
 
 </template>

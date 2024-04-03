@@ -9,8 +9,9 @@ export default {
     },
     methods: {
         searchTitle() {
-            state.getMovies()
-            state.userSearch = ""
+            state.getMovies();
+            state.getTvSeries();
+            state.userSearch = "";
         }
     }
 }
@@ -18,7 +19,7 @@ export default {
 
 <template>
     <div id="site_header">
-        <input type="text" v-model="state.userSearch">
+        <input type="text" placeholder="Cerca un titolo..." v-model="state.userSearch" @keyup.enter="searchTitle()">
         <button @click="searchTitle()">cerca</button>
     </div>
 </template>

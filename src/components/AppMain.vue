@@ -19,8 +19,10 @@ export default {
         <ul class="movies-list">
             <ResultCard v-for="movie in state.movies" :title="movie.title" :original_title="movie.original_title"
                 :language="movie.original_language" :vote="movie.vote_average" />
-
-
+        </ul>
+        <ul class="tv-series-list">
+            <ResultCard v-for="serie in state.tvSeries" :title="serie.name" :original_title="serie.original_name"
+                :language="serie.original_language" :vote="serie.vote_average" />
         </ul>
     </div>
 </template>
