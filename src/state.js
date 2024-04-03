@@ -14,7 +14,7 @@ export const state = reactive({
         axios
             .get(`${this.urlMovies}?api_key=${this.API_KEY}&query=${this.userSearch}`)
             .then(response => {
-                //console.log(response);
+                console.log(response);
                 this.movies = response.data.results;
                 console.log(this.movies);
             })

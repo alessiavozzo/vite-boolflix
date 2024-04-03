@@ -13,13 +13,23 @@
     --bool-dark: #141414;
     --bool-danger: red;
     --bool-lighter: white;
+    --bool-warning: rgb(245, 229, 1);
 }
 
 /* #endregion color-palette */
 
 /* #region common-rules */
+body {
+    background-color: var(--bool-dark);
+}
+
 .lang-icon {
     background-image: url(../node_modules/@textabledev/langs-flags-list/lang-flags.png);
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /* #region common-rules */

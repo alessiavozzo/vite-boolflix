@@ -19,27 +19,30 @@ export default {
 
 <template>
     <!-- site_header -->
-    <div id="site_header" class="d-flex">
-        <!-- left: logo + list -->
-        <div class="left-header d-flex">
-            <div class="logo">BOOLFLIX</div>
-            <ul class="list-inline">
-                <li>Home</li>
-                <li>Serie TV</li>
-                <li>Film</li>
-                <li>Aggiunti di recente</li>
-                <li>La mia lista</li>
-            </ul>
+    <div id="site_header">
+        <div class="container-header d-flex">
+            <!-- left: logo + list -->
+            <div class="left-header d-flex">
+                <div class="logo">BOOLFLIX</div>
+                <ul class="list-inline">
+                    <li>Home</li>
+                    <li>Serie TV</li>
+                    <li>Film</li>
+                    <li>Aggiunti di recente</li>
+                    <li>La mia lista</li>
+                </ul>
+            </div>
+
+            <!-- right: searchbar + button -->
+            <div class="right-header d-flex">
+                <input type="search" placeholder="Cerca un titolo..." v-model="state.userSearch"
+                    @keyup.enter="searchTitle()">
+                <button type="button" class="btn" @click="searchTitle()">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </button>
+            </div>
         </div>
 
-        <!-- right: searchbar + button -->
-        <div class="right-header d-flex">
-            <input type="search" placeholder="Cerca un titolo..." v-model="state.userSearch"
-                @keyup.enter="searchTitle()">
-            <button type="button" class="btn" @click="searchTitle()">
-                <i class="fa-solid fa-magnifying-glass"></i>
-            </button>
-        </div>
     </div>
 </template>
 
@@ -50,37 +53,46 @@ export default {
     background-color: var(--bool-darker);
     padding: 1rem;
     color: var(--bool-lighter);
-    justify-content: space-between;
-    align-items: center;
+    position: fixed;
+    width: 100%;
+    height: 4rem;
 
-    .left-header {
-        gap: 1rem;
+    .container-header {
+        justify-content: space-between;
         align-items: center;
+        max-width: 1600px;
+        margin: 0 auto;
 
-        .logo {
-            color: var(--bool-danger);
-            font-weight: bold;
-            font-size: 1.5rem;
-        }
+        .left-header {
+            gap: 1rem;
+            align-items: center;
 
-        ul {
-            gap: 0.7rem;
-        }
-    }
+            .logo {
+                color: var(--bool-danger);
+                font-weight: bold;
+                font-size: 1.5rem;
+            }
 
-    .right-header {
-
-        input {
-            padding: 0.4rem;
-
-            &:focus {
-                outline-color: var(--bool-danger);
+            ul {
+                gap: 0.7rem;
             }
         }
 
-        .btn {
-            padding: 0.4rem;
+        .right-header {
+
+            input {
+                padding: 0.4rem;
+
+                &:focus {
+                    outline-color: var(--bool-danger);
+                }
+            }
+
+            .btn {
+                padding: 0.4rem;
+            }
         }
     }
+
 }
 </style>

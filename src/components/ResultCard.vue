@@ -7,12 +7,14 @@ export default {
         original_title: String,
         language: String,
         vote: Number,
-        imageUrl: String
+        imageUrl: String,
+        overview: String
     },
     data() {
         return {
             state: state,
-            stars: 5
+            stars: 5,
+            onHover: false
         }
     },
     computed: {
@@ -29,17 +31,27 @@ export default {
 <template>
 
     <li class="result-card">
-        <img v-if="imageUrl !== null" :src="`${state.urlTitleImage}${imageUrl}`" :alt="`image of ${title}`">
-        <img v-else src="" alt="no-image-available">
-        <div class="title">Titolo: {{ title }}</div>
-        <div class="original-title">Titolo originale: {{ original_title }}</div>
-        <div class="lang">Lingua:
-            <span class="lang-icon" :class="`lang-icon-${language}`"></span>
+        <!-- image -->
+        <div class="image" v-if="onHover === false" @mouseover="onHover = true">
+            <img v-if="imageUrl !== null" :src="`${state.urlTitleImage}${imageUrl}`" :alt="`image of ${title}`">
+            <img v-else src="" alt="no-image-available">
         </div>
-        <div class="vote">Voto: {{ vote }}/10</div>
-        <div class="star-rating">
-            <i class="fa-solid fa-star" v-for="starsNumber in fullStars"></i>
-            <i class="fa-regular fa-star" v-for="emptyStarsNumber in emptyStars"></i>
+
+        <!-- info -->
+        <div class="info" @mouseleave="onHover = false" v-else>
+            <div class="title"><strong>Titolo:</strong> {{ title }}</div>
+            <div class="original-title" v-if="title != original_title"><strong>Titolo originale:</strong> {{
+            original_title }}</div>
+            <div class="lang"><strong>Lingua: </strong>
+                <span class="lang-icon" :class="`lang-icon-${language}`"></span>
+            </div>
+            <!-- <div class="vote">Voto: {{ vote }}/10</div> -->
+            <div class="star-rating">
+                <strong>Voto:</strong>
+                <i class="fa-solid fa-star full" v-for="starsNumber in fullStars"></i>
+                <i class="fa-regular fa-star empty" v-for="emptyStarsNumber in emptyStars"></i>
+            </div>
+            <div class="overview" v-if="overview !== ''"><strong>Overview:</strong> {{ overview }}</div>
         </div>
 
     </li>
@@ -48,4 +60,41 @@ export default {
 
 
 
-<style scoped></style>
+<style scoped>
+.result-card {
+    border: 1px solid var(--bool-lighter);
+    color: var(--bool-lighter);
+    width: 250px;
+    height: 375px;
+    margin-bottom: 1rem;
+
+    &:hover {
+        box-shadow: 0 0 4px 1px var(--bool-lighter);
+        cursor: pointer;
+    }
+
+    .image,
+    .info {
+        width: 100%;
+        height: 100%;
+    }
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .info {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        overflow-y: auto;
+
+        i.full {
+            color: var(--bool-warning);
+        }
+    }
+}
+</style>
