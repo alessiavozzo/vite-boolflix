@@ -18,7 +18,6 @@ export default {
 
 <template>
     <div id="site_header">
-        <span>header</span>
         <input type="text" v-model="state.userSearch">
         <button @click="searchTitle()">cerca</button>
     </div>
