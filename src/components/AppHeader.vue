@@ -10,6 +10,7 @@ export default {
     methods: {
         searchTitle() {
             state.getMovies()
+            state.userSearch = ""
         }
     }
 }
@@ -19,7 +20,7 @@ export default {
     <div id="site_header">
         <span>header</span>
         <input type="text" v-model="state.userSearch">
-        <button @click="searchTitle">cerca</button>
+        <button @click="searchTitle()">cerca</button>
     </div>
 </template>
 
