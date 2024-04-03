@@ -1,9 +1,37 @@
+/* #region reset */
 * {
     box-sizing: border-box;
     padding: 0;
     margin: 0;
 }
 
+/* #endregion reset */
+
+/* #region color-palette */
+:root {
+    --bool-darker: black;
+    --bool-dark: #141414;
+    --bool-danger: red;
+    --bool-lighter: white;
+}
+
+/* #endregion color-palette */
+
+/* #region common-rules */
 .lang-icon {
     background-image: url(../node_modules/@textabledev/langs-flags-list/lang-flags.png);
 }
+
+/* #region common-rules */
+
+/* #region utilities */
+.d-flex {
+    display: flex;
+}
+
+.list-inline {
+    list-style: none;
+    display: flex;
+}
+
+/* #endregion utilities */

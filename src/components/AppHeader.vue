@@ -18,12 +18,69 @@ export default {
 </script>
 
 <template>
-    <div id="site_header">
-        <input type="text" placeholder="Cerca un titolo..." v-model="state.userSearch" @keyup.enter="searchTitle()">
-        <button @click="searchTitle()">cerca</button>
+    <!-- site_header -->
+    <div id="site_header" class="d-flex">
+        <!-- left: logo + list -->
+        <div class="left-header d-flex">
+            <div class="logo">BOOLFLIX</div>
+            <ul class="list-inline">
+                <li>Home</li>
+                <li>Serie TV</li>
+                <li>Film</li>
+                <li>Aggiunti di recente</li>
+                <li>La mia lista</li>
+            </ul>
+        </div>
+
+        <!-- right: searchbar + button -->
+        <div class="right-header d-flex">
+            <input type="search" placeholder="Cerca un titolo..." v-model="state.userSearch"
+                @keyup.enter="searchTitle()">
+            <button type="button" class="btn" @click="searchTitle()">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
+        </div>
     </div>
 </template>
 
 
 
-<style scoped></style>
+<style scoped>
+#site_header {
+    background-color: var(--bool-darker);
+    padding: 1rem;
+    color: var(--bool-lighter);
+    justify-content: space-between;
+    align-items: center;
+
+    .left-header {
+        gap: 1rem;
+        align-items: center;
+
+        .logo {
+            color: var(--bool-danger);
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        ul {
+            gap: 0.7rem;
+        }
+    }
+
+    .right-header {
+
+        input {
+            padding: 0.4rem;
+
+            &:focus {
+                outline-color: var(--bool-danger);
+            }
+        }
+
+        .btn {
+            padding: 0.4rem;
+        }
+    }
+}
+</style>
