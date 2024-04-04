@@ -22,7 +22,7 @@ export default {
             //se l'utente non sceglie nessun filtro, dammi tutti i risultati e assegnali a filteredShowsByCategories
             //console.log(this.state.results);            
             //console.log(this.selectGenre)
-            if (state.selectGenre === "") {
+            if (state.selectGenre === "" || state.selectGenre === "all") {
                 this.filteredShowsByCategory = this.state.results
             }
             //se l'utente sceglie un filtro (@change sul select), filtra l'array e lo memorizza in filteredShowByCategories. 
@@ -44,7 +44,6 @@ export default {
         },
 
         resetFilters() {
-            state.selectGenre = "";
             state.selectedType = "";
         }
     },
@@ -54,7 +53,7 @@ export default {
     //ciclo in modo condizionale in displayedResults per ResultCard
     computed: {
         displayedResults() {
-            let filteredShows = state.selectGenre === "" ? this.state.results : this.filteredShowsByCategory
+            let filteredShows = state.selectGenre === "" || state.selectGenre === "all" ? this.state.results : this.filteredShowsByCategory
             //se mediatype è "tv", filtra gli show che hanno mediatype tv
             if (state.selectedType === "tv") {
                 return filteredShows.filter(show => {
@@ -90,8 +89,8 @@ export default {
             <div class="filter">
                 <label for="filter">filtra</label>
                 <select name="" id="filter" v-model="state.selectGenre" @change="filterShows()">
-                    <option :value="genre.id" v-for="genre in state.genresList">{{ genre.name }}
-                    </option>
+                    <option value="all">All</option>
+                    <option :value="genre.id" v-for="genre in state.genresList">{{ genre.name }}</option>
                 </select>
             </div>
 
