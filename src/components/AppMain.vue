@@ -41,6 +41,11 @@ export default {
             //console.log(state.results);
             state.selectedType = mediaType
             //console.log(this.selectedType);
+        },
+
+        resetFilters() {
+            state.selectGenre = "";
+            state.selectedType = "";
         }
     },
 
@@ -91,8 +96,9 @@ export default {
             </div>
 
             <div class="media-type-filter">
-                <button class="tv-btn" @click="filterByMediaType('tv')">TV series</button>
-                <button class="movie-btn" @click="filterByMediaType('movie')">Movies</button>
+                <button class="tv-btn" @click="filterByMediaType('tv')">Serie tv</button>
+                <button class="movie-btn" @click="filterByMediaType('movie')">Film</button>
+                <button class="reset-btn" @click="resetFilters()">Tutti</button>
             </div>
 
             <ul class="result-list list-inline row" v-if="showResults">
