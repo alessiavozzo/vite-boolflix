@@ -1,10 +1,14 @@
 <script>
 import { state } from "../state.js"
 import ResultCard from "./ResultCard.vue";
+import CategoryFilter from "./CategoryFilter.vue"
+import MediatypeFilter from "./MediatypeFilter.vue";
 export default {
     name: "AppMain",
     components: {
-        ResultCard
+        ResultCard,
+        CategoryFilter,
+        MediatypeFilter
     },
     data() {
         return {
@@ -86,19 +90,24 @@ export default {
     <div id="site_main">
         <div class="list-container">
 
-            <div class="filter">
+            <!-- <div class="category-filter">
                 <label for="filter">filtra</label>
                 <select name="" id="filter" v-model="state.selectGenre" @change="filterShows()">
                     <option value="all">All</option>
                     <option :value="genre.id" v-for="genre in state.genresList">{{ genre.name }}</option>
                 </select>
+            </div> -->
+            <div class="filters">
+                <CategoryFilter @use-filter="filterShows()" />
+                <MediatypeFilter @filter-tv="filterByMediaType('tv')" @filter-movie="filterByMediaType('movie')"
+                    @reset-btn="resetFilters()" />
             </div>
 
-            <div class="media-type-filter">
+            <!-- <div class=" media-type-filter">
                 <button class="tv-btn" @click="filterByMediaType('tv')">Serie tv</button>
                 <button class="movie-btn" @click="filterByMediaType('movie')">Film</button>
                 <button class="reset-btn" @click="resetFilters()">Tutti</button>
-            </div>
+        </div> -->
 
             <ul class="result-list list-inline row" v-if="showResults">
 
