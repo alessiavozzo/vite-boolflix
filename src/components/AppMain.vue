@@ -9,6 +9,54 @@ export default {
     data() {
         return {
             state: state,
+            selectGenre: "",
+            filteredShowsByCategory: [],
+        }
+    },
+    methods: {
+        filterShows() {
+            //this.filteredShowsByCategory memorizza i risultati filtrati per categoria
+            //ogni volta che parte la funzione, deve svuotarsi
+            this.filteredShowsByCategory = []
+
+            //se l'utente non sceglie nessun filtro, dammi tutti i risultati e assegnali a filteredShowsByCategories
+            //console.log(this.state.results);            
+            console.log(this.selectGenre)
+            if (this.selectGenre === "") {
+                this.filteredShowsByCategory = this.state.results
+            }
+            //se l'utente sceglie un filtro (@change sul select), filtra l'array e lo memorizza in filteredShowByCategories. 
+            //Per ogni show, se c'è genre_ids, prendo tutti i risultati e controllo se includono il genre_id selezionato dall'utente
+            else {
+                /* return this.state.results.filter(show => {
+                    //console.log(show);
+                    console.log(show.genre_ids);
+                    if (show.genre_ids) {
+                        console.log(this.selectGenre);
+                        return show.genre_ids.includes(this.selectGenre)
+                    }
+                }) */
+                this.filteredShowsByCategory = this.state.results.filter(show => {
+                    //console.log(show.genre_ids);
+                    //console.log(show.genre_ids.includes(this.selectGenre));
+                    return show.genre_ids && show.genre_ids.includes(this.selectGenre)
+                })
+            }
+        }
+    },
+
+    //mi serve computed perchè vede i cambiamenti
+    //se selectGenre è vuoto, deve mostrare tutti i risultati, altrimenti deve mostrare gli show filtrati per la categoria che ho scelto = displayedResults
+    //ciclo in modo condizionale in displayedResults per ResultCard
+    computed: {
+        displayedResults() {
+            return this.selectGenre === "" ? this.state.results : this.filteredShowsByCategory;
+        },
+
+        //i risultati devono apparire o se totalResults > 0 o se ci sono risultati già visualizzati in pagina
+        //showResults è vera se si verifica uno dei due casi
+        showResults() {
+            return this.state.totalResults > 0 || this.displayedResults.length > 0;
         }
     }
 }
@@ -18,9 +66,18 @@ export default {
     <div id="site_main">
         <div class="list-container">
 
-            <ul class="result-list list-inline row" v-if="state.totalResults > 0">
+            <div class="filter">
+                <label for="filter">filtra</label>
+                <select name="" id="filter" v-model="selectGenre" @change="filterShows()">
+                    <option :value="genre.id" v-for="genre in state.genresList">{{ genre.name }}
+                    </option>
+                </select>
+            </div>
 
-                <ResultCard v-for="show in state.results " :title="show.media_type === 'movie' ? show.title : show.name"
+            <ul class="result-list list-inline row" v-if="showResults">
+
+                <ResultCard v-for="show in displayedResults"
+                    :title="show.media_type === 'movie' ? show.title : show.name"
                     :original_title="show.media_type === 'movie' ? show.original_title : show.original_name"
                     :language="show.original_language" :vote="show.vote_average" :imageUrl="show.poster_path"
                     :overview="show.overview" :id="show.id" />

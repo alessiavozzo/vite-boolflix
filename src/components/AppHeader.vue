@@ -10,6 +10,7 @@ export default {
     methods: {
         searchTitle() {
             state.getMoviesAndSeries();
+            state.getAllGenres();
             state.userSearch = "";
         }
     }

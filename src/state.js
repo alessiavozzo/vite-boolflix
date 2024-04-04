@@ -11,6 +11,7 @@ export const state = reactive({
     genres: [],
     moviesAndSeries: [],
     totalResults: null,
+    genresList: [],
 
     getMoviesAndSeries() {
         axios
@@ -46,6 +47,29 @@ export const state = reactive({
                 })
 
 
+            })
+    },
+
+    getAllGenres() {
+        axios
+            .get(`https://api.themoviedb.org/3/genre/tv/list?&api_key=${this.API_KEY}`)
+            .then(response => {
+                console.log(response.data.genres);
+                let tvGenres = response.data.genres
+                this.genresList = [...tvGenres]
+                console.log(this.genresList);
+            })
+        axios
+            .get(`https://api.themoviedb.org/3/genre/movie/list?&api_key=${this.API_KEY}`)
+            .then(response => {
+                console.log(response.data.genres);
+                let movieGenres = response.data.genres
+                movieGenres.forEach(movieGenre => {
+                    if (!this.genresList.some(tvGenre => tvGenre.id === movieGenre.id)) {
+                        this.genresList.push(movieGenre)
+                    }
+                })
+                console.log(this.genresList);
             })
     }
 })
