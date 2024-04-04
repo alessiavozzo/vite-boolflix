@@ -1,5 +1,7 @@
 <script>
 import { state } from "../state.js"
+import axios from "axios";
+
 export default {
     name: "ResultCard",
     props: {
@@ -8,15 +10,38 @@ export default {
         language: String,
         vote: Number,
         imageUrl: String,
-        overview: String
+        overview: String,
+        id: Number
     },
     data() {
         return {
             state: state,
             stars: 5,
-            onHover: false
+            onHover: false,
+            //actors: [],
+            //genres: []
         }
     },
+
+    /* methods: {
+        getActors() {
+            axios
+                .get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=${state.API_KEY}&append_to_response=credits`)
+                .then(response => {
+                    console.log(response.data.credits.cast);
+                    this.actors = response.data.credits.cast
+                });
+        },
+        getGenres() {
+            axios
+                .get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=${state.API_KEY}&append_to_response=credits`)
+                .then(response => {
+                    console.log(response.data.genres);
+                    this.genres = response.data.genres
+                })
+        }
+    }, */
+
     computed: {
         fullStars() {
             return Math.ceil(this.vote / 2)
@@ -24,7 +49,11 @@ export default {
         emptyStars() {
             return this.stars - this.fullStars
         }
-    }
+    },
+    /* created() {
+        this.getActors()
+        this.getGenres()
+    } */
 }
 </script>
 
@@ -33,7 +62,7 @@ export default {
     <li class="result-card">
         <!-- image -->
         <div class="image" v-if="onHover === false" @mouseover="onHover = true">
-            <img v-if="imageUrl !== null" :src="`${state.urlTitleImage}${imageUrl}`" :alt="`image of ${title}`">
+            <img v-if="imageUrl != null" :src="`${state.urlTitleImage}${imageUrl}`" :alt="`image of ${title}`">
             <img v-else src="" alt="no-image-available">
         </div>
 
@@ -51,7 +80,21 @@ export default {
                 <i class="fa-solid fa-star full" v-for="starsNumber in fullStars"></i>
                 <i class="fa-regular fa-star empty" v-for="emptyStarsNumber in emptyStars"></i>
             </div>
+            <div class="genres">
+                <strong>Genere: </strong>
+                <span class="genre" v-for="genre in state.genres[id]">
+                    {{ genre.name }}
+                </span>
+            </div>
+            <div class="actors">
+                <strong>Cast: </strong>
+                <span class="actor" v-for="(actor, index) in state.actors[id].slice(0, 5)">
+                    {{ actor.name }}
+                    <span v-if="index < state.actors[id].slice(0, 5).length - 1">, </span>
+                </span>
+            </div>
             <div class="overview" v-if="overview !== ''"><strong>Overview:</strong> {{ overview }}</div>
+
         </div>
 
     </li>

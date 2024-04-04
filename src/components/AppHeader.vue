@@ -9,8 +9,9 @@ export default {
     },
     methods: {
         searchTitle() {
-            state.getMovies();
-            state.getTvSeries();
+            state.getMoviesAndSeries();
+            //state.getMovies();
+            //state.getTvSeries();
             state.userSearch = "";
         }
     }
