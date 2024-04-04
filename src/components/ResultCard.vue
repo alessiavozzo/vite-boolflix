@@ -1,6 +1,5 @@
 <script>
 import { state } from "../state.js"
-//import axios from "axios";
 
 export default {
     name: "ResultCard",
@@ -18,29 +17,8 @@ export default {
             state: state,
             stars: 5,
             onHover: false,
-            //actors: [],
-            //genres: []
         }
     },
-
-    /* methods: {
-        getActors() {
-            axios
-                .get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=${state.API_KEY}&append_to_response=credits`)
-                .then(response => {
-                    console.log(response.data.credits.cast);
-                    this.actors = response.data.credits.cast
-                });
-        },
-        getGenres() {
-            axios
-                .get(`https://api.themoviedb.org/3/movie/${this.id}?api_key=${state.API_KEY}&append_to_response=credits`)
-                .then(response => {
-                    console.log(response.data.genres);
-                    this.genres = response.data.genres
-                })
-        }
-    }, */
 
     computed: {
         fullStars() {
@@ -49,11 +27,7 @@ export default {
         emptyStars() {
             return this.stars - this.fullStars
         }
-    },
-    /* created() {
-        this.getActors()
-        this.getGenres()
-    } */
+    }
 }
 </script>
 
@@ -72,10 +46,12 @@ export default {
             <div class="title"><strong>Titolo:</strong> {{ title }}</div>
             <div class="original-title" v-if="title != original_title"><strong>Titolo originale:</strong> {{
             original_title }}</div>
+
             <!-- language -->
             <div class="lang"><strong>Lingua: </strong>
                 <span class="lang-icon" :class="`lang-icon-${language}`"></span>
             </div>
+
             <!-- <div class="vote">Voto: {{ vote }}/10</div> -->
             <!-- rating -->
             <div class="star-rating">
@@ -83,6 +59,7 @@ export default {
                 <i class="fa-solid fa-star full" v-for="starsNumber in fullStars"></i>
                 <i class="fa-regular fa-star empty" v-for="emptyStarsNumber in emptyStars"></i>
             </div>
+
             <!-- genres -->
             <div class="genres">
                 <strong>Genere: </strong>
@@ -90,6 +67,7 @@ export default {
                     {{ genre.name }}
                 </span>
             </div>
+
             <!-- actors -->
             <div class="actors">
                 <strong>Cast: </strong>
@@ -98,6 +76,7 @@ export default {
                     <span v-if="index < state.actors[id].slice(0, 5).length - 1">, </span>
                 </span>
             </div>
+
             <!-- overview -->
             <div class="overview" v-if="overview !== ''"><strong>Overview:</strong> {{ overview }}</div>
 

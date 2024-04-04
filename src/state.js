@@ -2,46 +2,26 @@ import { reactive } from "vue";
 import axios from "axios";
 
 export const state = reactive({
-    //urlMovies: "https://api.themoviedb.org/3/search/movie",
-    //urlTvSeries: "https://api.themoviedb.org/3/search/tv",
     urlMovieAndSeries: "https://api.themoviedb.org/3/search/multi",
     urlTitleImage: "https://image.tmdb.org/t/p/w342",
     API_KEY: "70a720a3fe7794c3aec73791756354ef",
     userSearch: "",
-    //movies: [],
-    //tvSeries: [],
     results: [],
     actors: [],
     genres: [],
     moviesAndSeries: [],
+    totalResults: null,
 
-    /* getMovies() {
-        axios
-            .get(`${this.urlMovies}?api_key=${this.API_KEY}&query=${this.userSearch}`)
-            .then(response => {
-                //console.log(response);
-                this.movies = response.data.results;
-                //console.log(this.movies); 
-                
-            })
-    } */
-    /* getTvSeries() {
-        axios
-            .get(`${this.urlTvSeries}?api_key=${this.API_KEY}&query=${this.userSearch}`)
-            .then(response => {
-                //console.log(response);
-                this.tvSeries = response.data.results;
-                //console.log(this.tvSeries);
-            })
-    }, */
     getMoviesAndSeries() {
         axios
-            .get(`https://api.themoviedb.org/3/search/multi?api_key=${this.API_KEY}&query=${this.userSearch}`)
+            .get(`${this.urlMovieAndSeries}?api_key=${this.API_KEY}&query=${this.userSearch}`)
             .then(response => {
                 console.log(response);
-
+                this.totalResults = response.data.total_results
+                console.log(this.totalResults);
                 //filtro direttamente qui solo serie tv o film (altrimenti dopo quando ci ciclo sopra mi recuperare anche i risultati con media_type diverso da movie o tv e non renderizza, es se c'è media_type === person)
                 this.results = response.data.results.filter(result => result.media_type === "movie" || result.media_type === "tv");
+                console.log(this.results);
 
                 let actorsByShow = {};
                 let genresByShow = {};
@@ -67,14 +47,5 @@ export const state = reactive({
 
 
             })
-    },
-
-    /* getActors(id) {
-        axios
-            .get(`https://api.themoviedb.org/3/movie/${id}?api_key=${state.API_KEY}&append_to_response=credits`)
-            .then(response => {
-                console.log(response.data.credits.cast);
-                this.actors = response.data.credits.cast
-            })
-    }, */
+    }
 })
