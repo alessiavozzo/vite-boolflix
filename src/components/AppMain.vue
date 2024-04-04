@@ -34,6 +34,13 @@ export default {
                     return show.genre_ids && show.genre_ids.includes(state.selectGenre)
                 })
             }
+        },
+
+        //accetta in entrata mediatype che gli passo al click sul bottone
+        filterByMediaType(mediaType) {
+            //console.log(state.results);
+            state.selectedType = mediaType
+            //console.log(this.selectedType);
         }
     },
 
@@ -42,8 +49,25 @@ export default {
     //ciclo in modo condizionale in displayedResults per ResultCard
     computed: {
         displayedResults() {
-            return state.selectGenre === "" ? this.state.results : this.filteredShowsByCategory;
+            let filteredShows = state.selectGenre === "" ? this.state.results : this.filteredShowsByCategory
+            //se mediatype è "tv", filtra gli show che hanno mediatype tv
+            if (state.selectedType === "tv") {
+                return filteredShows.filter(show => {
+                    //console.log(show.media_type);
+                    return show.media_type === "tv"
+                })
+            }
+            //se mediatype è "movie", filtra gli show che hanno mediatype film
+            else if (state.selectedType === "movie") {
+                return filteredShows.filter(show => show.media_type === "movie")
+            }
+            //se non seleziono nessun mediatype, voglio tutti i risultati
+            else {
+                return filteredShows
+            }
+            //return state.selectGenre === "" ? this.state.results : this.filteredShowsByCategory;
         },
+
 
         //i risultati devono apparire o se totalResults > 0 o se ci sono risultati già visualizzati in pagina
         //showResults è vera se si verifica uno dei due casi
@@ -64,6 +88,11 @@ export default {
                     <option :value="genre.id" v-for="genre in state.genresList">{{ genre.name }}
                     </option>
                 </select>
+            </div>
+
+            <div class="media-type-filter">
+                <button class="tv-btn" @click="filterByMediaType('tv')">TV series</button>
+                <button class="movie-btn" @click="filterByMediaType('movie')">Movies</button>
             </div>
 
             <ul class="result-list list-inline row" v-if="showResults">

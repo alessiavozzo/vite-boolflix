@@ -9,10 +9,10 @@ export const state = reactive({
     results: [],
     actors: [],
     genres: [],
-    moviesAndSeries: [],
     totalResults: null,
     genresList: [],
     selectGenre: "",
+    selectedType: "",
 
     getMoviesAndSeries() {
         axios
@@ -20,6 +20,8 @@ export const state = reactive({
             .then(response => {
                 //devo riazzerare il genere scelto ogni volta che faccio partire una funzione di ricerca di un titolo
                 this.selectGenre = ""
+                //devo riazzerare anche il tipo sennò alla nuova ricerca mi restituisce i risultati solo con la mediatype scelta
+                this.selectedType = ""
                 console.log(response);
                 this.totalResults = response.data.total_results
                 console.log(this.totalResults);
