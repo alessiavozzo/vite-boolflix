@@ -12,11 +12,14 @@ export const state = reactive({
     moviesAndSeries: [],
     totalResults: null,
     genresList: [],
+    selectGenre: "",
 
     getMoviesAndSeries() {
         axios
             .get(`${this.urlMovieAndSeries}?api_key=${this.API_KEY}&query=${this.userSearch}`)
             .then(response => {
+                //devo riazzerare il genere scelto ogni volta che faccio partire una funzione di ricerca di un titolo
+                this.selectGenre = ""
                 console.log(response);
                 this.totalResults = response.data.total_results
                 console.log(this.totalResults);
@@ -54,22 +57,24 @@ export const state = reactive({
         axios
             .get(`https://api.themoviedb.org/3/genre/tv/list?&api_key=${this.API_KEY}`)
             .then(response => {
-                console.log(response.data.genres);
+                //console.log(response.data.genres);
                 let tvGenres = response.data.genres
                 this.genresList = [...tvGenres]
-                console.log(this.genresList);
+                //console.log(this.genresList);
             })
         axios
             .get(`https://api.themoviedb.org/3/genre/movie/list?&api_key=${this.API_KEY}`)
             .then(response => {
                 console.log(response.data.genres);
                 let movieGenres = response.data.genres
+                //per ogni movieGenre, controlla se ci sono tvGenre con lo stesso id di movie.Genre
+                //se non c'è già l'id, pusha l'elemento nella lista dei generi
                 movieGenres.forEach(movieGenre => {
                     if (!this.genresList.some(tvGenre => tvGenre.id === movieGenre.id)) {
                         this.genresList.push(movieGenre)
                     }
                 })
-                console.log(this.genresList);
+                //console.log(this.genresList);
             })
     }
 })

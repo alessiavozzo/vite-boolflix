@@ -9,7 +9,6 @@ export default {
     data() {
         return {
             state: state,
-            selectGenre: "",
             filteredShowsByCategory: [],
         }
     },
@@ -17,29 +16,22 @@ export default {
         filterShows() {
             //this.filteredShowsByCategory memorizza i risultati filtrati per categoria
             //ogni volta che parte la funzione, deve svuotarsi
+            //la funzione parte al change opzione del select
             this.filteredShowsByCategory = []
 
             //se l'utente non sceglie nessun filtro, dammi tutti i risultati e assegnali a filteredShowsByCategories
             //console.log(this.state.results);            
-            console.log(this.selectGenre)
-            if (this.selectGenre === "") {
+            //console.log(this.selectGenre)
+            if (state.selectGenre === "") {
                 this.filteredShowsByCategory = this.state.results
             }
             //se l'utente sceglie un filtro (@change sul select), filtra l'array e lo memorizza in filteredShowByCategories. 
             //Per ogni show, se c'è genre_ids, prendo tutti i risultati e controllo se includono il genre_id selezionato dall'utente
             else {
-                /* return this.state.results.filter(show => {
-                    //console.log(show);
-                    console.log(show.genre_ids);
-                    if (show.genre_ids) {
-                        console.log(this.selectGenre);
-                        return show.genre_ids.includes(this.selectGenre)
-                    }
-                }) */
                 this.filteredShowsByCategory = this.state.results.filter(show => {
                     //console.log(show.genre_ids);
                     //console.log(show.genre_ids.includes(this.selectGenre));
-                    return show.genre_ids && show.genre_ids.includes(this.selectGenre)
+                    return show.genre_ids && show.genre_ids.includes(state.selectGenre)
                 })
             }
         }
@@ -50,7 +42,7 @@ export default {
     //ciclo in modo condizionale in displayedResults per ResultCard
     computed: {
         displayedResults() {
-            return this.selectGenre === "" ? this.state.results : this.filteredShowsByCategory;
+            return state.selectGenre === "" ? this.state.results : this.filteredShowsByCategory;
         },
 
         //i risultati devono apparire o se totalResults > 0 o se ci sono risultati già visualizzati in pagina
@@ -68,7 +60,7 @@ export default {
 
             <div class="filter">
                 <label for="filter">filtra</label>
-                <select name="" id="filter" v-model="selectGenre" @change="filterShows()">
+                <select name="" id="filter" v-model="state.selectGenre" @change="filterShows()">
                     <option :value="genre.id" v-for="genre in state.genresList">{{ genre.name }}
                     </option>
                 </select>
