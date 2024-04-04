@@ -88,27 +88,16 @@ export default {
 
 <template>
     <div id="site_main">
-        <div class="list-container">
+        <div class="main-container">
 
-            <!-- <div class="category-filter">
-                <label for="filter">filtra</label>
-                <select name="" id="filter" v-model="state.selectGenre" @change="filterShows()">
-                    <option value="all">All</option>
-                    <option :value="genre.id" v-for="genre in state.genresList">{{ genre.name }}</option>
-                </select>
-            </div> -->
-            <div class="filters">
-                <CategoryFilter @use-filter="filterShows()" />
+            <!-- filters -->
+            <div class="filters d-flex">
                 <MediatypeFilter @filter-tv="filterByMediaType('tv')" @filter-movie="filterByMediaType('movie')"
                     @reset-btn="resetFilters()" />
+                <CategoryFilter @use-filter="filterShows()" />
             </div>
 
-            <!-- <div class=" media-type-filter">
-                <button class="tv-btn" @click="filterByMediaType('tv')">Serie tv</button>
-                <button class="movie-btn" @click="filterByMediaType('movie')">Film</button>
-                <button class="reset-btn" @click="resetFilters()">Tutti</button>
-        </div> -->
-
+            <!-- results list -->
             <ul class="result-list list-inline row" v-if="showResults">
 
                 <ResultCard v-for="show in displayedResults"
@@ -132,11 +121,17 @@ export default {
 #site_main {
     background-color: var(--bool-dark);
 
-    .list-container {
+    .main-container {
         padding: 5rem 1rem;
         max-width: 1600px;
         margin: 0 auto;
         color: var(--bool-lighter);
+
+        .filters {
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
 
         ul {
             flex-wrap: wrap;

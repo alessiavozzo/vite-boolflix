@@ -15,12 +15,30 @@ export default {
 
 
 <template>
-    <div class="media-type-filter">
-        <button class="tv-btn" @click="$emit('filterTv')">Serie tv</button>
-        <button class="movie-btn" @click="$emit('filterMovie')">Film</button>
-        <button class="reset-btn" @click="$emit('resetBtn')">Tutti</button>
+    <!-- mediatype filter: tv series/movies -->
+    <div class="media-type-filter d-flex">
+        <button class="btn tv-btn" @click="$emit('filterTv')">Serie tv</button>
+        <button class="btn movie-btn" @click="$emit('filterMovie')">Film</button>
+        <button class="btn reset-btn" @click="$emit('resetBtn')">Tutti</button>
     </div>
 </template>
 
 
-<style scoped></style>
+<style scoped>
+.media-type-filter {
+    gap: 1rem;
+
+    .btn {
+        padding: 0.5rem;
+        border-radius: 5px;
+        border: 1px solid var(--bool-lighter);
+        background-color: var(--bool-grey);
+        color: var(--bool-lighter);
+        cursor: pointer;
+
+        &:hover {
+            background-color: var(--bool-dark);
+        }
+    }
+}
+</style>

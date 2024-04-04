@@ -90,6 +90,7 @@ export default {
 
             .btn {
                 padding: 0.4rem;
+                cursor: pointer;
             }
         }
     }

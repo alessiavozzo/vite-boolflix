@@ -11,6 +11,7 @@
 :root {
     --bool-darker: black;
     --bool-dark: #141414;
+    --bool-grey: #333333;
     --bool-danger: red;
     --bool-lighter: white;
     --bool-warning: rgb(245, 229, 1);
