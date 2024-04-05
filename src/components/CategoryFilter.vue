@@ -16,7 +16,7 @@ export default {
 <template>
     <!-- genre filter -->
     <div class="category-filter d-flex">
-        <label for="filter">Categorie: </label>
+        <label for="filter">Filtra per categoria: </label>
         <div class="select-element">
             <select name="filter-select" id="filter" v-model="state.selectGenre" @change="$emit('useFilter')">
                 <option value="all">All</option>

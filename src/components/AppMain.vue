@@ -5,13 +5,19 @@ import CategoryFilter from "./CategoryFilter.vue"
 import MediatypeFilter from "./MediatypeFilter.vue";
 import DefaultPage from "./DefaultPage.vue";
 import axios from "axios";
+import 'vue3-carousel/dist/carousel.css'
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 export default {
     name: "AppMain",
     components: {
         ResultCard,
         CategoryFilter,
         MediatypeFilter,
-        DefaultPage
+        DefaultPage,
+        Carousel,
+        Slide,
+        Pagination,
+        Navigation
     },
     data() {
         return {
@@ -20,6 +26,32 @@ export default {
         }
     },
     methods: {
+        getMoviesList(id) {
+            console.log(id);
+            axios
+                .get(`https://api.themoviedb.org/3/discover/movie?&api_key=${state.API_KEY}&with_genres=${id}`)
+                .then(response => {
+                    console.log(response.data.results);
+                    state.moviesList = response.data.results
+                })
+        },
+
+        getSeriesList(id) {
+            console.log(id);
+            axios
+                .get(`https://api.themoviedb.org/3/discover/tv?&api_key=${state.API_KEY}&with_genres=${id}`)
+                .then(response => {
+                    console.log(response.data.results);
+                    state.seriesList = response.data.results
+                })
+        },
+
+        getShowsByGenre(id) {
+            this.getMoviesList(id);
+            this.getSeriesList(id);
+            state.genres = []
+        },
+
         callPopularMovies() {
             axios
                 .get(`https://api.themoviedb.org/3/movie/popular?&api_key=${state.API_KEY}`)
@@ -95,7 +127,6 @@ export default {
             //return state.selectGenre === "" ? this.state.results : this.filteredShowsByCategory;
         },
 
-
         //i risultati devono apparire o se totalResults > 0 o se ci sono risultati già visualizzati in pagina
         //showResults è vera se si verifica uno dei due casi
         showResults() {
@@ -103,10 +134,10 @@ export default {
         }
     },
 
-    //da sistemare
     created() {
         this.callPopularMovies(),
-            this.callPopularSeries()
+            this.callPopularSeries(),
+            state.getAllGenres()
     }
 }
 </script>
@@ -114,6 +145,14 @@ export default {
 <template>
     <div id="site_main">
         <div class="main-container">
+
+            <!-- filter movie and series by genre -->
+            <div class="pick-a-genre">
+                <div class="genres-list">
+                    <span class="single-genre" v-for="genre in state.genresList" @click="getShowsByGenre(genre.id)">{{
+                        genre.name }}</span>
+                </div>
+            </div>
 
             <!-- filters -->
             <div class="filters d-flex">
@@ -123,13 +162,13 @@ export default {
             </div>
 
             <!-- default page -->
-            <div class="default-page" v-if="!showResults && state.totalResults !== 0">
+            <div class="default-page" v-if="!showResults && state.totalResults !== 0 && state.moviesList.length === 0">
                 <DefaultPage />
             </div>
 
             <!-- results list -->
             <!-- if there are results -->
-            <ul class="result-list list-inline row" v-else-if="showResults">
+            <ul class="result-list list-inline row" v-else-if="showResults && state.moviesList.length === 0">
 
                 <ResultCard v-for="show in displayedResults"
                     :title="show.media_type === 'movie' ? show.title : show.name"
@@ -139,7 +178,7 @@ export default {
 
             </ul>
             <!-- if nothing is found -->
-            <div class="no-results d-flex" v-else-if="state.totalResults === 0">
+            <div class="no-results d-flex" v-else-if="state.totalResults === 0 && state.moviesList.length === 0">
                 <p>Nessun risultato trovato per la tua ricerca. Suggerimenti:</p>
                 <ul>
                     <li>Prova con parole chiave diverse</li>
@@ -147,6 +186,52 @@ export default {
                     <li>Prova a cercare il titolo di un film o di una serie tv</li>
                 </ul>
 
+            </div>
+
+            <div class="shows-genre-selected" v-else-if="state.moviesList.length !== 0">
+
+                <h2>FILM</h2>
+                <ul class="movies list-inline row">
+
+                    <Carousel :itemsToShow="5" :wrapAround="true" :transition="500" :itemsToScroll="4">
+                        <Slide v-for="(genreMovie, index) in state.moviesList" :key="index">
+                            <ResultCard :title="genreMovie.title" :original_title="genreMovie.original_title"
+                                :language="genreMovie.original_language" :vote="genreMovie.vote_average"
+                                :imageUrl="genreMovie.poster_path" :overview="genreMovie.overview" :id="genreMovie.id"
+                                :type="genreMovie.media_type" />
+                        </Slide>
+                        <template #addons>
+                            <Navigation />
+                        </template>
+                    </Carousel>
+
+                    <!-- <ResultCard v-for="genreMovie in state.moviesList" :title="genreMovie.title"
+                        :original_title="genreMovie.original_title" :language="genreMovie.original_language"
+                        :vote="genreMovie.vote_average" :imageUrl="genreMovie.poster_path"
+                        :overview="genreMovie.overview" :id="genreMovie.id" :type="genreMovie.media_type" /> -->
+                </ul>
+
+                <h2>SERIE</h2>
+                <!-- <ul class="series list-inline row">
+
+                    <ResultCard v-for="genreSerie in state.seriesList" :title="genreSerie.name"
+                        :original_title="genreSerie.original_name" :language="genreSerie.original_language"
+                        :vote="genreSerie.vote_average" :imageUrl="genreSerie.poster_path"
+                        :overview="genreSerie.overview" :id="genreSerie.id" :type="genreSerie.media_type" />
+
+                </ul> -->
+
+                <Carousel :itemsToShow="5" :wrapAround="true" :transition="500" :itemsToScroll="4">
+                    <Slide v-for="(genreSerie, index) in state.seriesList" :key="index">
+                        <ResultCard :title="genreSerie.name" :original_title="genreSerie.original_name"
+                            :language="genreSerie.original_language" :vote="genreSerie.vote_average"
+                            :imageUrl="genreSerie.poster_path" :overview="genreSerie.overview" :id="genreSerie.id"
+                            :type="genreSerie.media_type" />
+                    </Slide>
+                    <template #addons>
+                        <Navigation />
+                    </template>
+                </Carousel>
             </div>
 
         </div>

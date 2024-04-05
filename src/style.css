@@ -46,9 +46,13 @@ a {
     background: black;
 }
 
-/* #region common-rules */
+/* #endregion common-rules */
 
 /* #region utilities */
+.d-none {
+    display: none;
+}
+
 .d-flex {
     display: flex;
 }
@@ -59,3 +63,19 @@ a {
 }
 
 /* #endregion utilities */
+
+/* #region mediaqueries */
+
+@media screen and (max-width: 768px) {
+    #site_header {
+        .fa-house {
+            display: block !important;
+        }
+
+        .list-inline {
+            display: none;
+        }
+    }
+}
+
+@media screen and (max-width: 540px) {}

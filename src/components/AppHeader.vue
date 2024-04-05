@@ -13,7 +13,8 @@ export default {
             state.getAllGenres();
             state.userSearch = "";
             state.popularMovies = [],
-                state.popularSeries = []
+                state.popularSeries = [],
+                state.moviesList = []
         }
     }
 }
@@ -26,7 +27,8 @@ export default {
             <!-- left: logo + list -->
             <div class="left-header d-flex">
                 <div class="logo">BOOLFLIX</div>
-                <ul class="list-inline">
+                <i class="fa-solid fa-house d-none" @click="$emit('reloadPage')"></i>
+                <ul class=" list-inline">
                     <li><a href="#" @click="$emit('reloadPage')">Home</a></li>
                     <li><a href="#">Serie TV</a></li>
                     <li><a href="#">Film</a></li>
@@ -37,7 +39,7 @@ export default {
 
             <!-- right: searchbar + button -->
             <div class="right-header d-flex">
-                <input type="search" placeholder="Cerca un titolo..." v-model="state.userSearch"
+                <input type="search" id="searchbar" placeholder="Cerca un titolo..." v-model="state.userSearch"
                     @keyup.enter="searchTitle()">
                 <button type="button" class="btn" @click="searchTitle()">
                     <i class="fa-solid fa-magnifying-glass"></i>
@@ -58,6 +60,7 @@ export default {
     position: fixed;
     width: 100%;
     height: 4rem;
+    z-index: 100000;
 
     nav {
         justify-content: space-between;
