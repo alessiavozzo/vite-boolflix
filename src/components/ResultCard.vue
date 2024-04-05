@@ -10,7 +10,8 @@ export default {
         vote: Number,
         imageUrl: String,
         overview: String,
-        id: Number
+        id: Number,
+        type: String
     },
     data() {
         return {
@@ -33,23 +34,24 @@ export default {
 
 <template>
 
-    <li class="result-card">
+    <li class="result-card" @mouseover="onHover = true" @mouseleave="onHover = false">
 
-        
+        <div class="card-flip" :class="{ flipped: onHover }">
             <!-- image -->
-            <div class="image" v-if="onHover === false" @mouseover="onHover = true">
+            <div class="image" v-if="onHover === false">
                 <img v-if="imageUrl !== null" :src="`${state.urlTitleImage}${imageUrl}`" :alt="`image of ${title}`">
                 <img v-else src="" alt="no-image-available">
             </div>
-        
 
-        
             <!-- info -->
-            <div class="info" @mouseleave="onHover = false" v-else>
+            <div class="info" v-else>
+                <!-- type -->
+                <div class="type">{{ type }}</div>
+
                 <!-- titles -->
                 <div class="title"><strong>Titolo:</strong> {{ title }}</div>
                 <div class="original-title" v-if="title != original_title"><strong>Titolo originale:</strong> {{
-                original_title }}</div>
+        original_title }}</div>
 
                 <!-- language -->
                 <div class="lang"><strong>Lingua: </strong>
@@ -86,7 +88,8 @@ export default {
                 <div class="overview" v-if="overview !== ''"><strong>Overview:</strong> {{ overview }}</div>
 
             </div>
-        
+        </div>
+
 
 
     </li>
@@ -102,10 +105,22 @@ export default {
     width: 250px;
     height: 375px;
     margin-bottom: 1rem;
+    perspective: 1000px;
 
     &:hover {
         box-shadow: 0 0 4px 1px var(--bool-lighter);
         cursor: pointer;
+    }
+
+    .card-flip {
+        width: 100%;
+        height: 100%;
+        transition: transform 0.5s ease;
+        transform-style: preserve-3d;
+    }
+
+    .card-flip.flipped {
+        transform: rotateY(180deg)
     }
 
     .image,
@@ -127,6 +142,17 @@ export default {
         gap: 0.5rem;
         overflow-y: auto;
         background-color: var(--bool-grey);
+        transform: rotateY(180deg);
+
+        .type {
+            border-top: 1px solid var(--bool-lighter);
+            border-bottom: 1px solid var(--bool-lighter);
+            padding: 0.3rem 0;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-align: center
+        }
 
         i.full {
             color: var(--bool-warning);
