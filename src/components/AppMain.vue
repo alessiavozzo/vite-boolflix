@@ -4,12 +4,18 @@ import ResultCard from "./ResultCard.vue";
 import CategoryFilter from "./CategoryFilter.vue"
 import MediatypeFilter from "./MediatypeFilter.vue";
 import axios from "axios";
+import 'vue3-carousel/dist/carousel.css'
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 export default {
     name: "AppMain",
     components: {
         ResultCard,
         CategoryFilter,
-        MediatypeFilter
+        MediatypeFilter,
+        Carousel,
+        Slide,
+        Pagination,
+        Navigation,
     },
     data() {
         return {
@@ -115,11 +121,15 @@ export default {
             <div class="default-page" v-if="!showResults && state.totalResults !== 0">
                 <h2>Film popolari:</h2>
                 <div class="popular-movies">
-                    <ul>
-                        <li v-for="popularMovie in state.popularMovies">
+                    <Carousel :itemsToShow="5" :wrapAround="true" :transition="500" :itemsToScroll="4">
+                        <Slide v-for="popularMovie in state.popularMovies" :key="slide">
                             <img :src="state.urlTitleImage + popularMovie.poster_path" :alt="popularMovie.title">
-                        </li>
-                    </ul>
+                        </Slide>
+                        <template #addons>
+                            <Navigation />
+                        </template>
+                    </Carousel>
+
                 </div>
             </div>
 
@@ -187,21 +197,20 @@ export default {
             padding: 1rem 0;
         }
 
-        ul {
-            list-style: none;
-            display: flex;
+        li {
+            width: 300px;
+            height: 200px;
+            padding: 0 0.2rem;
 
-            li {
-                width: 300px;
-                height: 200px;
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                    object-fit: cover;
-                }
+            &:hover {
+                border: 1px solid var(--bool-lighter);
             }
 
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
         }
     }
 
