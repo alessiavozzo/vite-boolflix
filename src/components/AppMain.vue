@@ -3,6 +3,7 @@ import { state } from "../state.js"
 import ResultCard from "./ResultCard.vue";
 import CategoryFilter from "./CategoryFilter.vue"
 import MediatypeFilter from "./MediatypeFilter.vue";
+import axios from "axios";
 export default {
     name: "AppMain",
     components: {
@@ -13,10 +14,18 @@ export default {
     data() {
         return {
             state: state,
-            filteredShowsByCategory: [],
+            filteredShowsByCategory: []
         }
     },
     methods: {
+        callPopularMovies() {
+            axios
+                .get(`https://api.themoviedb.org/3/movie/popular?&api_key=${state.API_KEY}`)
+                .then(response => {
+                    //console.log(response.data.results);
+                    state.popularMovies = response.data.results
+                })
+        },
         filterShows() {
             //this.filteredShowsByCategory memorizza i risultati filtrati per categoria
             //ogni volta che parte la funzione, deve svuotarsi
@@ -82,6 +91,11 @@ export default {
         showResults() {
             return this.state.totalResults > 0 || this.displayedResults.length > 0;
         }
+    },
+
+    //da sistemare
+    created() {
+        this.callPopularMovies()
     }
 }
 </script>
@@ -97,6 +111,18 @@ export default {
                 <CategoryFilter @use-filter="filterShows()" />
             </div>
 
+            <!-- default page -->
+            <div class="default-page">
+                <!-- <h2>Film popolari:</h2> -->
+                <div class="popular-movies">
+                    <ul>
+                        <li v-for="popularMovie in state.popularMovies">
+                            <img :src="state.urlTitleImage + popularMovie.poster_path" :alt="popularMovie.title">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <!-- results list -->
             <ul class="result-list list-inline row" v-if="showResults">
 
@@ -107,10 +133,17 @@ export default {
                     :overview="show.overview" :id="show.id" />
 
             </ul>
-            <p class="no-results" v-else-if="state.totalResults === 0">Nessun risultato trovato</p>
+            <div class="no-results d-flex" v-else-if="state.totalResults === 0">
+                <p>Nessun risultato trovato per la tua ricerca. Suggerimenti:</p>
+                <ul>
+                    <li>Prova con parole chiave diverse</li>
+                    <li>Cerchi un film o una serie tv?</li>
+                    <li>Prova a cercare il titolo di un film o di una serie tv</li>
+                </ul>
+
+            </div>
 
         </div>
-
     </div>
 
 </template>
@@ -137,6 +170,35 @@ export default {
             flex-wrap: wrap;
             justify-content: center;
             gap: 0.2rem;
+        }
+    }
+
+    .no-results {
+        padding-top: 4rem;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .default-page {
+        padding: 1rem 0;
+
+        ul {
+            list-style: none;
+            display: flex;
+
+            li {
+                width: 300px;
+                height: 200px;
+
+                img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+            }
+
         }
     }
 

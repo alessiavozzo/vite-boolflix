@@ -13,6 +13,7 @@ export const state = reactive({
     genresList: [],
     selectGenre: "",
     selectedType: "",
+    popularMovies: [],
 
     getMoviesAndSeries() {
         axios

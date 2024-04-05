@@ -33,6 +33,19 @@ body {
     flex-wrap: wrap;
 }
 
+a {
+    text-decoration: none;
+    color: var(--bool-lighter);
+}
+
+::-webkit-scrollbar {
+    width: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: black;
+}
+
 /* #region common-rules */
 
 /* #region utilities */

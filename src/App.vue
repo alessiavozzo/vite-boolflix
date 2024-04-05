@@ -7,12 +7,17 @@ export default {
   components: {
     AppHeader,
     AppMain
+  },
+  methods: {
+    reloadPage() {
+      window.location.reload()
+    }
   }
 }
 </script>
 
 <template>
-  <AppHeader />
+  <AppHeader @reload-page="reloadPage()" />
   <AppMain />
 </template>
 

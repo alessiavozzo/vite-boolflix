@@ -12,6 +12,7 @@ export default {
             state.getMoviesAndSeries();
             state.getAllGenres();
             state.userSearch = "";
+            state.popularMovies = []
         }
     }
 }
@@ -20,16 +21,16 @@ export default {
 <template>
     <!-- site_header -->
     <div id="site_header">
-        <div class="container-header d-flex">
+        <nav class="d-flex">
             <!-- left: logo + list -->
             <div class="left-header d-flex">
                 <div class="logo">BOOLFLIX</div>
                 <ul class="list-inline">
-                    <li>Home</li>
-                    <li>Serie TV</li>
-                    <li>Film</li>
-                    <li>Aggiunti di recente</li>
-                    <li>La mia lista</li>
+                    <li><a href="#" @click="$emit('reloadPage')">Home</a></li>
+                    <li><a href="#">Serie TV</a></li>
+                    <li><a href="#">Film</a></li>
+                    <li><a href="#">Aggiunti di recente</a></li>
+                    <li><a href="#">La mia lista</a></li>
                 </ul>
             </div>
 
@@ -41,7 +42,7 @@ export default {
                     <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
             </div>
-        </div>
+        </nav>
 
     </div>
 </template>
@@ -57,7 +58,7 @@ export default {
     width: 100%;
     height: 4rem;
 
-    .container-header {
+    nav {
         justify-content: space-between;
         align-items: center;
         max-width: 1600px;
@@ -82,15 +83,21 @@ export default {
 
             input {
                 padding: 0.4rem;
+                background-color: var(--bool-dark);
+                color: var(--bool-lighter);
+                border: 1px solid var(--bool-dark);
 
                 &:focus {
-                    outline-color: var(--bool-danger);
+                    outline-color: var(--bool-lighter);
                 }
             }
 
             .btn {
                 padding: 0.4rem;
                 cursor: pointer;
+                background-color: var(--bool-dark);
+                border: none;
+                color: var(--bool-lighter);
             }
         }
     }
