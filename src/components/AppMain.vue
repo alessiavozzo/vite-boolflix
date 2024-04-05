@@ -3,19 +3,15 @@ import { state } from "../state.js"
 import ResultCard from "./ResultCard.vue";
 import CategoryFilter from "./CategoryFilter.vue"
 import MediatypeFilter from "./MediatypeFilter.vue";
+import DefaultPage from "./DefaultPage.vue";
 import axios from "axios";
-import 'vue3-carousel/dist/carousel.css'
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 export default {
     name: "AppMain",
     components: {
         ResultCard,
         CategoryFilter,
         MediatypeFilter,
-        Carousel,
-        Slide,
-        Pagination,
-        Navigation,
+        DefaultPage
     },
     data() {
         return {
@@ -30,6 +26,14 @@ export default {
                 .then(response => {
                     //console.log(response.data.results);
                     state.popularMovies = response.data.results
+                })
+        },
+        callPopularSeries() {
+            axios
+                .get(`https://api.themoviedb.org/3/tv/popular?&api_key=${state.API_KEY}`)
+                .then(response => {
+                    console.log(response.data.results);
+                    state.popularSeries = response.data.results
                 })
         },
         filterShows() {
@@ -101,7 +105,8 @@ export default {
 
     //da sistemare
     created() {
-        this.callPopularMovies()
+        this.callPopularMovies(),
+            this.callPopularSeries()
     }
 }
 </script>
@@ -119,21 +124,11 @@ export default {
 
             <!-- default page -->
             <div class="default-page" v-if="!showResults && state.totalResults !== 0">
-                <h2>Film popolari:</h2>
-                <div class="popular-movies">
-                    <Carousel :itemsToShow="5" :wrapAround="true" :transition="500" :itemsToScroll="4">
-                        <Slide v-for="popularMovie in state.popularMovies" :key="slide">
-                            <img :src="state.urlTitleImage + popularMovie.poster_path" :alt="popularMovie.title">
-                        </Slide>
-                        <template #addons>
-                            <Navigation />
-                        </template>
-                    </Carousel>
-
-                </div>
+                <DefaultPage />
             </div>
 
             <!-- results list -->
+            <!-- if there are results -->
             <ul class="result-list list-inline row" v-else-if="showResults">
 
                 <ResultCard v-for="show in displayedResults"
@@ -143,6 +138,7 @@ export default {
                     :overview="show.overview" :id="show.id" :type="show.media_type" />
 
             </ul>
+            <!-- if nothing is found -->
             <div class="no-results d-flex" v-else-if="state.totalResults === 0">
                 <p>Nessun risultato trovato per la tua ricerca. Suggerimenti:</p>
                 <ul>
@@ -192,27 +188,9 @@ export default {
     }
 
     .default-page {
-
-        h2 {
-            padding: 1rem 0;
-        }
-
-        li {
-            width: 300px;
-            height: 200px;
-            padding: 0 0.2rem;
-
-            &:hover {
-                border: 1px solid var(--bool-lighter);
-            }
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
     }
-
 }
 </style>

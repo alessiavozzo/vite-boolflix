@@ -12,7 +12,8 @@ export default {
             state.getMoviesAndSeries();
             state.getAllGenres();
             state.userSearch = "";
-            state.popularMovies = []
+            state.popularMovies = [],
+                state.popularSeries = []
         }
     }
 }
