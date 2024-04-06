@@ -4,8 +4,9 @@ import ResultCard from "./ResultCard.vue";
 import CategoryFilter from "./CategoryFilter.vue"
 import MediatypeFilter from "./MediatypeFilter.vue";
 import DefaultPage from "./DefaultPage.vue";
+import GenreSelectedShows from "./GenreSelectedShows.vue";
 import axios from "axios";
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+
 
 export default {
     name: "AppMain",
@@ -14,10 +15,7 @@ export default {
         CategoryFilter,
         MediatypeFilter,
         DefaultPage,
-        Carousel,
-        Slide,
-        Pagination,
-        Navigation
+        GenreSelectedShows
     },
     data() {
         return {
@@ -149,12 +147,12 @@ export default {
     <div id="site_main">
         <div class="main-container">
 
-            <!-- filter movie and series by genre -->
+            <!-- filter movies and series by genre -->
             <div class="pick-a-genre" v-if="!showResults">
                 <div class="genres-list">
                     <span class="genre-badge" v-for="genre in state.genresList"
                         @click="getShowsByGenre(genre.id, genre.name)">{{
-                genre.name }}</span>
+                            genre.name }}</span>
                 </div>
             </div>
 
@@ -166,13 +164,15 @@ export default {
             </div>
 
             <!-- default page -->
-            <div class="default-page" v-if="!showResults && state.totalResults !== 0 && state.moviesList.length === 0">
+            <div class="default-page"
+                v-if="!showResults && state.totalResults !== 0 && state.moviesList.length === 0 && state.seriesList.length === 0">
                 <DefaultPage />
             </div>
 
             <!-- results list -->
-            <!-- if there are results -->
-            <ul class="result-list list-inline row" v-else-if="showResults && state.moviesList.length === 0">
+            <!-- if you search for a title and you get results -->
+            <ul class="result-list list-inline row"
+                v-else-if="showResults && state.moviesList.length === 0 && state.seriesList.length === 0">
 
                 <ResultCard v-for="show in displayedResults"
                     :title="show.media_type === 'movie' ? show.title : show.name"
@@ -181,8 +181,10 @@ export default {
                     :overview="show.overview" :id="show.id" :type="show.media_type" />
 
             </ul>
-            <!-- if nothing is found -->
-            <div class="no-results d-flex" v-else-if="state.totalResults === 0 && state.moviesList.length === 0">
+
+            <!-- if no result is found -->
+            <div class="no-results d-flex"
+                v-else-if="state.totalResults === 0 && state.moviesList.length === 0 && state.seriesList.length === 0">
                 <p>Nessun risultato trovato per la tua ricerca. Suggerimenti:</p>
                 <ul>
                     <li>Prova con parole chiave diverse</li>
@@ -192,8 +194,11 @@ export default {
 
             </div>
 
-            <div class="shows-genre-selected d-flex" v-else-if="state.moviesList.length !== 0">
-                <div class="genre-movies" v-if="state.moviesList.length !== 0">
+            <!-- if you search for a genre -->
+            <div class="shows-genre-selected d-flex"
+                v-else-if="state.moviesList.length !== 0 || state.seriesList.length !== 0">
+                <GenreSelectedShows :chosenGenre="chosenGenre" />
+                <!-- <div class="genre-movies" v-if="state.moviesList.length !== 0">
                     <h2>Film {{ chosenGenre }}:</h2>
                     <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
                         snapAlign="start">
@@ -206,25 +211,24 @@ export default {
                         <template #addons>
                             <Navigation />
                         </template>
-                    </Carousel>
+</Carousel>
 
-                </div>
+</div>
 
-                <div class="genre-series" v-if="state.seriesList.length !== 0">
-                    <h2>Serie TV {{ chosenGenre }}:</h2>
-                    <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
-                        snapAlign="start">
-                        <Slide v-for="(genreSerie, index) in state.seriesList" :key="index">
-                            <ResultCard :title="genreSerie.name" :original_title="genreSerie.original_name"
-                                :language="genreSerie.original_language" :vote="genreSerie.vote_average"
-                                :imageUrl="genreSerie.poster_path" :overview="genreSerie.overview" :id="genreSerie.id"
-                                :type="genreSerie.media_type" />
-                        </Slide>
-                        <template #addons>
-                            <Navigation />
-                        </template>
-                    </Carousel>
-                </div>
+<div class="genre-series" v-if="state.seriesList.length !== 0">
+    <h2>Serie TV {{ chosenGenre }}:</h2>
+    <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5" snapAlign="start">
+        <Slide v-for="(genreSerie, index) in state.seriesList" :key="index">
+            <ResultCard :title="genreSerie.name" :original_title="genreSerie.original_name"
+                :language="genreSerie.original_language" :vote="genreSerie.vote_average"
+                :imageUrl="genreSerie.poster_path" :overview="genreSerie.overview" :id="genreSerie.id"
+                :type="genreSerie.media_type" />
+        </Slide>
+        <template #addons>
+                        <Navigation />
+                    </template>
+    </Carousel>
+</div> -->
             </div>
 
         </div>
@@ -276,33 +280,24 @@ export default {
             }
         }
     }
-}
 
-.no-results {
-    padding-top: 4rem;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.default-page {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.shows-genre-selected {
-    flex-direction: column;
-    gap: 1rem;
-
-    h2 {
-        padding-bottom: 0.5rem;
+    .no-results {
+        padding-top: 4rem;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 1rem;
     }
 
-    li {
-        list-style: none;
-        padding: 0 0.2rem;
+    .default-page {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    .shows-genre-selected {
+        flex-direction: column;
+        gap: 1rem;
     }
 }
 </style>

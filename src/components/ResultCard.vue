@@ -51,7 +51,7 @@ export default {
                 <!-- titles -->
                 <div class="title"><strong>Titolo:</strong> {{ title }}</div>
                 <div class="original-title" v-if="title != original_title"><strong>Titolo originale:</strong> {{
-        original_title }}</div>
+                    original_title }}</div>
 
                 <!-- language -->
                 <div class="lang"><strong>Lingua: </strong>
