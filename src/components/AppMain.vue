@@ -21,7 +21,8 @@ export default {
         return {
             state: state,
             filteredShowsByCategory: [],
-            chosenGenre: ""
+            chosenGenre: "",
+            show: false
         }
     },
     methods: {
@@ -147,23 +148,30 @@ export default {
     <div id="site_main">
         <div class="main-container">
 
+            <!-- FILTERS: generic filter + searched show filters -->
+
             <!-- filter movies and series by genre -->
-            <div class="pick-a-genre" v-if="!showResults">
-                <div class="genres-list">
-                    <span class="genre-badge" v-for="genre in state.genresList"
-                        @click="getShowsByGenre(genre.id, genre.name)">{{
-                            genre.name }}</span>
-                </div>
+            <div class="pick-a-genre d-flex" v-if="!showResults">
+                <button type="button" class="show-genres" @click="show = !show">Categorie</button>
+                <Transition name="slide-appear">
+                    <div class="genres-list" v-if="show">
+                        <button class="genre-badge" v-for="genre in state.genresList"
+                            @click="getShowsByGenre(genre.id, genre.name)">{{
+                                genre.name }}
+                        </button>
+                    </div>
+                </Transition>
             </div>
 
-            <!-- filters -->
+            <!-- filter researched-show results by type (movie or serie) and by genre ()-->
             <div class="filters d-flex" v-else>
                 <MediatypeFilter @filter-tv="filterByMediaType('tv')" @filter-movie="filterByMediaType('movie')"
                     @reset-btn="resetFilters()" />
                 <CategoryFilter @use-filter="filterShows()" />
             </div>
 
-            <!-- default page -->
+            <!-- PAGE RENDER -->
+            <!-- default page => most popular movies and series-->
             <div class="default-page"
                 v-if="!showResults && state.totalResults !== 0 && state.moviesList.length === 0 && state.seriesList.length === 0">
                 <DefaultPage />
@@ -198,40 +206,10 @@ export default {
             <div class="shows-genre-selected d-flex"
                 v-else-if="state.moviesList.length !== 0 || state.seriesList.length !== 0">
                 <GenreSelectedShows :chosenGenre="chosenGenre" />
-                <!-- <div class="genre-movies" v-if="state.moviesList.length !== 0">
-                    <h2>Film {{ chosenGenre }}:</h2>
-                    <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
-                        snapAlign="start">
-                        <Slide v-for="(genreMovie, index) in state.moviesList" :key="index">
-                            <ResultCard :title="genreMovie.title" :original_title="genreMovie.original_title"
-                                :language="genreMovie.original_language" :vote="genreMovie.vote_average"
-                                :imageUrl="genreMovie.poster_path" :overview="genreMovie.overview" :id="genreMovie.id"
-                                :type="genreMovie.media_type" />
-                        </Slide>
-                        <template #addons>
-                            <Navigation />
-                        </template>
-</Carousel>
-
-</div>
-
-<div class="genre-series" v-if="state.seriesList.length !== 0">
-    <h2>Serie TV {{ chosenGenre }}:</h2>
-    <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5" snapAlign="start">
-        <Slide v-for="(genreSerie, index) in state.seriesList" :key="index">
-            <ResultCard :title="genreSerie.name" :original_title="genreSerie.original_name"
-                :language="genreSerie.original_language" :vote="genreSerie.vote_average"
-                :imageUrl="genreSerie.poster_path" :overview="genreSerie.overview" :id="genreSerie.id"
-                :type="genreSerie.media_type" />
-        </Slide>
-        <template #addons>
-                        <Navigation />
-                    </template>
-    </Carousel>
-</div> -->
             </div>
 
         </div>
+
     </div>
 
 </template>
@@ -261,25 +239,56 @@ export default {
         }
     }
 
-    .genres-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem;
-        padding: 0.5rem 0 1rem 0;
+    .pick-a-genre {
+        gap: 1rem;
 
-        .genre-badge {
-            border: 1px solid var(--bool-lighter);
-            padding: 0.3rem;
+        .show-genres {
+            align-self: flex-start;
+            margin: 0.5rem 0;
+            padding: 0.5rem;
             border-radius: 5px;
-            transition: 0.3s ease;
+            border: 1px solid var(--bool-lighter);
+            background-color: var(--bool-dark);
+            color: var(--bool-lighter);
+            font-size: 1.3rem;
+            font-weight: bold;
             cursor: pointer;
 
             &:hover {
                 background-color: var(--bool-lighter);
                 color: var(--bool-dark);
             }
+
+        }
+
+        .genres-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0.5rem 0 1rem 0;
+
+            .genre-badge {
+                border: 1px solid var(--bool-lighter);
+                padding: 0.3rem;
+                border-radius: 5px;
+                background-color: var(--bool-dark);
+                color: var(--bool-lighter);
+                transition: 0.3s ease;
+                cursor: pointer;
+
+                &:hover {
+                    background-color: var(--bool-lighter);
+                    color: var(--bool-dark);
+                }
+
+                &:focus {
+                    background-color: var(--bool-lighter);
+                    color: var(--bool-dark);
+                }
+            }
         }
     }
+
 
     .no-results {
         padding-top: 4rem;
@@ -299,5 +308,21 @@ export default {
         flex-direction: column;
         gap: 1rem;
     }
+
+}
+
+/* #transition */
+.slide-appear-enter-active {
+    transition: all 0.5s ease-out;
+}
+
+.slide-appear-leave-active {
+    transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-appear-enter-from,
+.slide-appear-leave-to {
+    transform: translateX(-30px);
+    opacity: 0;
 }
 </style>

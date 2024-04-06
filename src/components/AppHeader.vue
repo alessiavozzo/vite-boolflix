@@ -14,7 +14,8 @@ export default {
             state.userSearch = "";
             state.popularMovies = [],
                 state.popularSeries = [],
-                state.moviesList = []
+                state.moviesList = [],
+                state.seriesList = []
         }
     }
 }
