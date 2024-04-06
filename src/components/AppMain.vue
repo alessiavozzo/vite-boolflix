@@ -5,8 +5,8 @@ import CategoryFilter from "./CategoryFilter.vue"
 import MediatypeFilter from "./MediatypeFilter.vue";
 import DefaultPage from "./DefaultPage.vue";
 import axios from "axios";
-import 'vue3-carousel/dist/carousel.css'
-import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+
 export default {
     name: "AppMain",
     components: {
@@ -22,7 +22,8 @@ export default {
     data() {
         return {
             state: state,
-            filteredShowsByCategory: []
+            filteredShowsByCategory: [],
+            chosenGenre: ""
         }
     },
     methods: {
@@ -46,10 +47,12 @@ export default {
                 })
         },
 
-        getShowsByGenre(id) {
+        getShowsByGenre(id, name) {
             this.getMoviesList(id);
             this.getSeriesList(id);
+            this.chosenGenre = name
             state.genres = []
+            //console.log(this.chosenGenre);
         },
 
         callPopularMovies() {
@@ -147,15 +150,16 @@ export default {
         <div class="main-container">
 
             <!-- filter movie and series by genre -->
-            <div class="pick-a-genre">
+            <div class="pick-a-genre" v-if="!showResults">
                 <div class="genres-list">
-                    <span class="single-genre" v-for="genre in state.genresList" @click="getShowsByGenre(genre.id)">{{
-                        genre.name }}</span>
+                    <span class="genre-badge" v-for="genre in state.genresList"
+                        @click="getShowsByGenre(genre.id, genre.name)">{{
+                genre.name }}</span>
                 </div>
             </div>
 
             <!-- filters -->
-            <div class="filters d-flex">
+            <div class="filters d-flex" v-else>
                 <MediatypeFilter @filter-tv="filterByMediaType('tv')" @filter-movie="filterByMediaType('movie')"
                     @reset-btn="resetFilters()" />
                 <CategoryFilter @use-filter="filterShows()" />
@@ -188,12 +192,11 @@ export default {
 
             </div>
 
-            <div class="shows-genre-selected" v-else-if="state.moviesList.length !== 0">
-
-                <h2>FILM</h2>
-                <ul class="movies list-inline row">
-
-                    <Carousel :itemsToShow="5" :wrapAround="true" :transition="500" :itemsToScroll="4">
+            <div class="shows-genre-selected d-flex" v-else-if="state.moviesList.length !== 0">
+                <div class="genre-movies" v-if="state.moviesList.length !== 0">
+                    <h2>Film {{ chosenGenre }}:</h2>
+                    <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
+                        snapAlign="start">
                         <Slide v-for="(genreMovie, index) in state.moviesList" :key="index">
                             <ResultCard :title="genreMovie.title" :original_title="genreMovie.original_title"
                                 :language="genreMovie.original_language" :vote="genreMovie.vote_average"
@@ -205,33 +208,23 @@ export default {
                         </template>
                     </Carousel>
 
-                    <!-- <ResultCard v-for="genreMovie in state.moviesList" :title="genreMovie.title"
-                        :original_title="genreMovie.original_title" :language="genreMovie.original_language"
-                        :vote="genreMovie.vote_average" :imageUrl="genreMovie.poster_path"
-                        :overview="genreMovie.overview" :id="genreMovie.id" :type="genreMovie.media_type" /> -->
-                </ul>
+                </div>
 
-                <h2>SERIE</h2>
-                <!-- <ul class="series list-inline row">
-
-                    <ResultCard v-for="genreSerie in state.seriesList" :title="genreSerie.name"
-                        :original_title="genreSerie.original_name" :language="genreSerie.original_language"
-                        :vote="genreSerie.vote_average" :imageUrl="genreSerie.poster_path"
-                        :overview="genreSerie.overview" :id="genreSerie.id" :type="genreSerie.media_type" />
-
-                </ul> -->
-
-                <Carousel :itemsToShow="5" :wrapAround="true" :transition="500" :itemsToScroll="4">
-                    <Slide v-for="(genreSerie, index) in state.seriesList" :key="index">
-                        <ResultCard :title="genreSerie.name" :original_title="genreSerie.original_name"
-                            :language="genreSerie.original_language" :vote="genreSerie.vote_average"
-                            :imageUrl="genreSerie.poster_path" :overview="genreSerie.overview" :id="genreSerie.id"
-                            :type="genreSerie.media_type" />
-                    </Slide>
-                    <template #addons>
-                        <Navigation />
-                    </template>
-                </Carousel>
+                <div class="genre-series" v-if="state.seriesList.length !== 0">
+                    <h2>Serie TV {{ chosenGenre }}:</h2>
+                    <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
+                        snapAlign="start">
+                        <Slide v-for="(genreSerie, index) in state.seriesList" :key="index">
+                            <ResultCard :title="genreSerie.name" :original_title="genreSerie.original_name"
+                                :language="genreSerie.original_language" :vote="genreSerie.vote_average"
+                                :imageUrl="genreSerie.poster_path" :overview="genreSerie.overview" :id="genreSerie.id"
+                                :type="genreSerie.media_type" />
+                        </Slide>
+                        <template #addons>
+                            <Navigation />
+                        </template>
+                    </Carousel>
+                </div>
             </div>
 
         </div>
@@ -264,18 +257,52 @@ export default {
         }
     }
 
-    .no-results {
-        padding-top: 4rem;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        gap: 1rem;
+    .genres-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        padding: 0.5rem 0 1rem 0;
+
+        .genre-badge {
+            border: 1px solid var(--bool-lighter);
+            padding: 0.3rem;
+            border-radius: 5px;
+            transition: 0.3s ease;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--bool-lighter);
+                color: var(--bool-dark);
+            }
+        }
+    }
+}
+
+.no-results {
+    padding-top: 4rem;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.default-page {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.shows-genre-selected {
+    flex-direction: column;
+    gap: 1rem;
+
+    h2 {
+        padding-bottom: 0.5rem;
     }
 
-    .default-page {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
+    li {
+        list-style: none;
+        padding: 0 0.2rem;
     }
 }
 </style>
