@@ -156,58 +156,62 @@ export default {
         <div class="main-container">
 
             <!-- if a click on navbar "film"  -->
-            <div class="film-page" v-if="state.allMovies.length > 0">
-                <div class="genre-name" v-for="genre in state.genresList">
-                    <div class="results" v-if="state.allMovies[genre.id] && state.allMovies[genre.id].length > 0">
-                        <!-- genre name -->
-                        <strong>{{ genre.name }}</strong>
-                        <!-- results as slides -->
-                        <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
-                            snapAlign="start">
-                            <Slide v-for="(movie, index) in state.allMovies[genre.id]" :key="index">
-                                <ResultCard :title="movie.title" :original_title="movie.original_title"
-                                    :language="movie.original_language" :vote="movie.vote_average"
-                                    :imageUrl="movie.poster_path" :overview="movie.overview" :id="movie.id"
-                                    :type="movie.media_type" />
-                            </Slide>
+            <Transition name="fade-appear" :duration="600">
+                <div class="film-page" v-if="state.allMovies.length > 0">
+                    <div class="genre-name" v-for="genre in state.genresList">
+                        <div class="results" v-if="state.allMovies[genre.id] && state.allMovies[genre.id].length > 0">
+                            <!-- genre name -->
+                            <h2>{{ genre.name }}</h2>
+                            <!-- results as slides -->
+                            <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="1"
+                                snapAlign="start">
+                                <Slide v-for="(movie, index) in state.allMovies[genre.id]" :key="index">
+                                    <ResultCard :title="movie.title" :original_title="movie.original_title"
+                                        :language="movie.original_language" :vote="movie.vote_average"
+                                        :imageUrl="movie.poster_path" :overview="movie.overview" :id="movie.id"
+                                        :type="movie.media_type" />
+                                </Slide>
 
-                            <template #addons>
-                                <Navigation />
-                                <Pagination />
-                            </template>
-                        </Carousel>
+                                <template #addons>
+                                    <Navigation />
+                                    <Pagination />
+                                </template>
+                            </Carousel>
+                        </div>
+
+
                     </div>
-
-
                 </div>
-            </div>
+            </Transition>
 
             <!-- if a click on navbar "serie"  -->
-            <div class="serie-page" v-else-if="state.allSeries.length > 0">
-                <div class="genre-name" v-for="genre in state.genresList">
-                    <div class="results" v-if="state.allSeries[genre.id] && state.allSeries[genre.id].length > 0">
-                        <!-- genre name -->
-                        <strong>{{ genre.name }}</strong>
-                        <!-- results as slides -->
-                        <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
-                            snapAlign="start">
-                            <Slide v-for="(serie, index) in state.allSeries[genre.id]" :key="index">
-                                <ResultCard :title="serie.name" :original_title="serie.original_name"
-                                    :language="serie.original_language" :vote="serie.vote_average"
-                                    :imageUrl="serie.poster_path" :overview="serie.overview" :id="serie.id"
-                                    :type="serie.media_type" />
-                            </Slide>
+            <Transition name="fade-appear" :duration="600">
+                <div class="serie-page" v-if="state.allSeries.length > 0">
+                    <div class="genre-name" v-for="genre in state.genresList">
+                        <div class="results" v-if="state.allSeries[genre.id] && state.allSeries[genre.id].length > 0">
+                            <!-- genre name -->
+                            <h2>{{ genre.name }}</h2>
+                            <!-- results as slides -->
+                            <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="1"
+                                snapAlign="start">
+                                <Slide v-for="(serie, index) in state.allSeries[genre.id]" :key="index">
+                                    <ResultCard :title="serie.name" :original_title="serie.original_name"
+                                        :language="serie.original_language" :vote="serie.vote_average"
+                                        :imageUrl="serie.poster_path" :overview="serie.overview" :id="serie.id"
+                                        :type="serie.media_type" />
+                                </Slide>
 
-                            <template #addons>
-                                <Navigation />
-                                <Pagination />
-                            </template>
-                        </Carousel>
+                                <template #addons>
+                                    <Navigation />
+                                    <Pagination />
+                                </template>
+                            </Carousel>
+                        </div>
+
+
                     </div>
-
-
                 </div>
-            </div>
+            </Transition>
 
             <!-- FILTERS: generic filter + searched show filters -->
 
@@ -235,6 +239,7 @@ export default {
             <!-- default page => most popular movies and series-->
             <div class="default-page"
                 v-if="!showResults && state.totalResults !== 0 && state.moviesList.length === 0 && state.seriesList.length === 0">
+
                 <DefaultPage />
             </div>
 
@@ -370,9 +375,22 @@ export default {
         gap: 1rem;
     }
 
+    .serie-page,
+    .film-page {
+        h2 {
+            padding: 1rem 0;
+        }
+
+        li {
+            list-style: none;
+            padding: 0 0.2rem;
+        }
+    }
+
 }
 
 /* #transition */
+/* categories: slide-appear */
 .slide-appear-enter-active {
     transition: all 0.5s ease-out;
 }
@@ -385,5 +403,26 @@ export default {
 .slide-appear-leave-to {
     transform: translateX(-30px);
     opacity: 0;
+}
+
+/* film/serie btn: fade appear + slide for results*/
+.fade-appear-enter-active,
+.fade-appear-leave-active {
+    transition: all 0.3s ease-in-out;
+
+    .results {
+        transition: all 0.3s ease-in-out;
+        transition-delay: 0.25s;
+    }
+}
+
+.fade-appear-enter-from {
+    transform: translateY(30px);
+    opacity: 0;
+
+    .results {
+        transform: translateX(30px);
+        opacity: 0;
+    }
 }
 </style>
