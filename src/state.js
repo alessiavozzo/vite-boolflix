@@ -17,6 +17,7 @@ export const state = reactive({
     popularSeries: [],
     moviesList: [],
     seriesList: [],
+    allMovies: [],
 
     //In base al titolo cercato, metto in un unico array (results) tutti i risultati che hanno media type tv o movie (escludo person etc)
     //Per ogni elemento in results, faccio una chiamata che mi restituisce attori e generi di ogni show

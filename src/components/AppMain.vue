@@ -6,6 +6,8 @@ import MediatypeFilter from "./MediatypeFilter.vue";
 import DefaultPage from "./DefaultPage.vue";
 import GenreSelectedShows from "./GenreSelectedShows.vue";
 import axios from "axios";
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel';
+
 
 
 export default {
@@ -15,7 +17,11 @@ export default {
         CategoryFilter,
         MediatypeFilter,
         DefaultPage,
-        GenreSelectedShows
+        GenreSelectedShows,
+        Carousel,
+        Slide,
+        Pagination,
+        Navigation
     },
     data() {
         return {
@@ -23,11 +29,11 @@ export default {
             filteredShowsByCategory: [],
             chosenGenre: "",
             show: false,
-            allMovies: []
+            /* allMovies: [] */
         }
     },
     methods: {
-        getAllMoviesGenreSorted() {
+        /* getAllMoviesGenreSorted() {
             console.log(state.genresList);
             state.genresList.forEach(genre => {
                 axios
@@ -41,7 +47,7 @@ export default {
                     })
             })
 
-        },
+        }, */
         getMoviesList(id) {
             console.log(id);
             axios
@@ -164,12 +170,29 @@ export default {
     <div id="site_main">
         <div class="main-container">
 
-            <button @click="getAllMoviesGenreSorted()">Film</button>
-            <div class="prova" v-for="(genre, index) in state.genresList">
-                <strong>{{ genre.name }}</strong>
-                <div v-for="movie in allMovies[genre.id]">{{ movie.title }}</div>
 
+            <div v-if="state.allMovies.length > 0">
+                <div class="genre-name" v-for="genre in state.genresList">
+                    <strong v-if="state.allMovies[genre.id] && state.allMovies[genre.id].length > 0">{{ genre.name
+                        }}</strong>
+                    <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
+                        snapAlign="start">
+                        <Slide v-for="(movie, index) in state.allMovies[genre.id]" :key="index">
+                            <ResultCard :title="movie.title" :original_title="movie.original_title"
+                                :language="movie.original_language" :vote="movie.vote_average"
+                                :imageUrl="movie.poster_path" :overview="movie.overview" :id="movie.id"
+                                :type="movie.media_type" />
+                        </Slide>
+
+                        <template #addons>
+                            <Navigation />
+                        </template>
+                    </Carousel>
+
+
+                </div>
             </div>
+
             <!-- FILTERS: generic filter + searched show filters -->
 
             <!-- filter movies and series by genre -->

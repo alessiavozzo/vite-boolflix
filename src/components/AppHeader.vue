@@ -34,7 +34,7 @@ export default {
                 <ul class=" list-inline">
                     <li><a href="#" @click="$emit('reloadPage')">Home</a></li>
                     <li><a href="#">Serie TV</a></li>
-                    <li><a href="#">Film</a></li>
+                    <li><a href="#" @click="$emit('getFilmPage')">Film</a></li>
                     <li><a href="#">Aggiunti di recente</a></li>
                     <li><a href="#">La mia lista</a></li>
                 </ul>
