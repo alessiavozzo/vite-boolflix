@@ -22,10 +22,26 @@ export default {
             state: state,
             filteredShowsByCategory: [],
             chosenGenre: "",
-            show: false
+            show: false,
+            allMovies: []
         }
     },
     methods: {
+        getAllMoviesGenreSorted() {
+            console.log(state.genresList);
+            state.genresList.forEach(genre => {
+                axios
+                    .get(`https://api.themoviedb.org/3/discover/movie?&api_key=${state.API_KEY}&with_genres=${genre.id}`)
+                    .then(response => {
+                        console.log(genre);
+                        console.log(response.data.results);
+                        this.allMovies[genre.id] = response.data.results
+                        console.log(this.allMovies[genre.id]);
+                        console.log(this.allMovies);
+                    })
+            })
+
+        },
         getMoviesList(id) {
             console.log(id);
             axios
@@ -148,6 +164,12 @@ export default {
     <div id="site_main">
         <div class="main-container">
 
+            <button @click="getAllMoviesGenreSorted()">Film</button>
+            <div class="prova" v-for="(genre, index) in state.genresList">
+                <strong>{{ genre.name }}</strong>
+                <div v-for="movie in allMovies[genre.id]">{{ movie.title }}</div>
+
+            </div>
             <!-- FILTERS: generic filter + searched show filters -->
 
             <!-- filter movies and series by genre -->

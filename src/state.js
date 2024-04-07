@@ -18,6 +18,8 @@ export const state = reactive({
     moviesList: [],
     seriesList: [],
 
+    //In base al titolo cercato, metto in un unico array (results) tutti i risultati che hanno media type tv o movie (escludo person etc)
+    //Per ogni elemento in results, faccio una chiamata che mi restituisce attori e generi di ogni show
     getMoviesAndSeries() {
         axios
             .get(`${this.urlMovieAndSeries}?api_key=${this.API_KEY}&query=${this.userSearch}`)

@@ -27,7 +27,9 @@ export default {
         <nav class="d-flex">
             <!-- left: logo + list -->
             <div class="left-header d-flex">
-                <div class="logo">BOOLFLIX</div>
+                <div class="logo">
+                    <img src="../assets/img/logo.png" alt="">
+                </div>
                 <i class="fa-solid fa-house d-none" @click="$emit('reloadPage')"></i>
                 <ul class=" list-inline">
                     <li><a href="#" @click="$emit('reloadPage')">Home</a></li>
@@ -68,15 +70,22 @@ export default {
         align-items: center;
         max-width: 1600px;
         margin: 0 auto;
+        height: 100%;
 
         .left-header {
-            gap: 1rem;
+            gap: 1.5rem;
             align-items: center;
+            height: 100%;
 
             .logo {
                 color: var(--bool-danger);
                 font-weight: bold;
                 font-size: 1.5rem;
+                height: 100%;
+
+                img {
+                    height: 100%;
+                }
             }
 
             ul {
