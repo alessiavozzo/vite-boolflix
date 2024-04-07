@@ -40,7 +40,9 @@ export default {
             <!-- image -->
             <div class="image" v-if="onHover === false">
                 <img v-if="imageUrl !== null" :src="`${state.urlTitleImage}${imageUrl}`" :alt="`image of ${title}`">
-                <img v-else src="" alt="no-image-available">
+                <img class="no-image" v-else
+                    src="https://upload.wikimedia.org/wikipedia/commons/d/d1/Image_not_available.png"
+                    alt="no-image-available">
             </div>
 
             <!-- info -->
@@ -136,6 +138,14 @@ export default {
         width: 100%;
         height: 100%;
         object-fit: cover;
+    }
+
+    .no-image {
+        object-fit: contain;
+    }
+
+    .image:has(.no-image) {
+        background-color: var(--bool-darker);
     }
 
     .info {

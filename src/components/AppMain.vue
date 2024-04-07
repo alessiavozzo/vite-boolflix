@@ -56,8 +56,10 @@ export default {
         getShowsByGenre(id, name) {
             this.getMoviesList(id);
             this.getSeriesList(id);
-            this.chosenGenre = name
-            state.genres = []
+            this.chosenGenre = name;
+            state.genres = [];
+            state.allMovies = [];
+            state.allSeries = []
             //console.log(this.chosenGenre);
         },
 
@@ -155,6 +157,29 @@ export default {
     <div id="site_main">
         <div class="main-container">
 
+
+            <!-- FILTERS: generic filter + searched show filters -->
+
+            <!-- filter movies and series by genre -->
+            <div class="pick-a-genre d-flex" v-if="!showResults">
+                <button type="button" class="show-genres" @click="show = !show">Categorie</button>
+                <Transition name="slide-appear">
+                    <div class="genres-list" v-if="show">
+                        <button class="genre-badge" v-for="genre in state.genresList"
+                            @click="getShowsByGenre(genre.id, genre.name)">{{
+                                genre.name }}
+                        </button>
+                    </div>
+                </Transition>
+            </div>
+
+            <!-- filter researched-show results by type (movie or serie) and by genre ()-->
+            <div class="filters d-flex" v-else>
+                <MediatypeFilter @filter-tv="filterByMediaType('tv')" @filter-movie="filterByMediaType('movie')"
+                    @reset-btn="resetFilters()" />
+                <CategoryFilter @use-filter="filterShows()" />
+            </div>
+
             <!-- if a click on navbar "film"  -->
             <Transition name="fade-appear" :duration="600">
                 <div class="film-page" v-if="state.allMovies.length > 0">
@@ -213,32 +238,10 @@ export default {
                 </div>
             </Transition>
 
-            <!-- FILTERS: generic filter + searched show filters -->
-
-            <!-- filter movies and series by genre -->
-            <div class="pick-a-genre d-flex" v-if="!showResults">
-                <button type="button" class="show-genres" @click="show = !show">Categorie</button>
-                <Transition name="slide-appear">
-                    <div class="genres-list" v-if="show">
-                        <button class="genre-badge" v-for="genre in state.genresList"
-                            @click="getShowsByGenre(genre.id, genre.name)">{{
-                                genre.name }}
-                        </button>
-                    </div>
-                </Transition>
-            </div>
-
-            <!-- filter researched-show results by type (movie or serie) and by genre ()-->
-            <div class="filters d-flex" v-else>
-                <MediatypeFilter @filter-tv="filterByMediaType('tv')" @filter-movie="filterByMediaType('movie')"
-                    @reset-btn="resetFilters()" />
-                <CategoryFilter @use-filter="filterShows()" />
-            </div>
-
             <!-- PAGE RENDER -->
             <!-- default page => most popular movies and series-->
             <div class="default-page"
-                v-if="!showResults && state.totalResults !== 0 && state.moviesList.length === 0 && state.seriesList.length === 0">
+                v-if="!showResults && state.totalResults !== 0 && state.moviesList.length === 0 && state.seriesList.length === 0 && state.allMovies.length === 0 && state.allSeries.length === 0">
 
                 <DefaultPage />
             </div>
