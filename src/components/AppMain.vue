@@ -33,21 +33,6 @@ export default {
         }
     },
     methods: {
-        /* getAllMoviesGenreSorted() {
-            console.log(state.genresList);
-            state.genresList.forEach(genre => {
-                axios
-                    .get(`https://api.themoviedb.org/3/discover/movie?&api_key=${state.API_KEY}&with_genres=${genre.id}`)
-                    .then(response => {
-                        console.log(genre);
-                        console.log(response.data.results);
-                        this.allMovies[genre.id] = response.data.results
-                        console.log(this.allMovies[genre.id]);
-                        console.log(this.allMovies);
-                    })
-            })
-
-        }, */
         getMoviesList(id) {
             console.log(id);
             axios
@@ -170,24 +155,55 @@ export default {
     <div id="site_main">
         <div class="main-container">
 
-
-            <div v-if="state.allMovies.length > 0">
+            <!-- if a click on navbar "film"  -->
+            <div class="film-page" v-if="state.allMovies.length > 0">
                 <div class="genre-name" v-for="genre in state.genresList">
-                    <strong v-if="state.allMovies[genre.id] && state.allMovies[genre.id].length > 0">{{ genre.name
-                        }}</strong>
-                    <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
-                        snapAlign="start">
-                        <Slide v-for="(movie, index) in state.allMovies[genre.id]" :key="index">
-                            <ResultCard :title="movie.title" :original_title="movie.original_title"
-                                :language="movie.original_language" :vote="movie.vote_average"
-                                :imageUrl="movie.poster_path" :overview="movie.overview" :id="movie.id"
-                                :type="movie.media_type" />
-                        </Slide>
+                    <div class="results" v-if="state.allMovies[genre.id] && state.allMovies[genre.id].length > 0">
+                        <!-- genre name -->
+                        <strong>{{ genre.name }}</strong>
+                        <!-- results as slides -->
+                        <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
+                            snapAlign="start">
+                            <Slide v-for="(movie, index) in state.allMovies[genre.id]" :key="index">
+                                <ResultCard :title="movie.title" :original_title="movie.original_title"
+                                    :language="movie.original_language" :vote="movie.vote_average"
+                                    :imageUrl="movie.poster_path" :overview="movie.overview" :id="movie.id"
+                                    :type="movie.media_type" />
+                            </Slide>
 
-                        <template #addons>
-                            <Navigation />
-                        </template>
-                    </Carousel>
+                            <template #addons>
+                                <Navigation />
+                                <Pagination />
+                            </template>
+                        </Carousel>
+                    </div>
+
+
+                </div>
+            </div>
+
+            <!-- if a click on navbar "serie"  -->
+            <div class="serie-page" v-else-if="state.allSeries.length > 0">
+                <div class="genre-name" v-for="genre in state.genresList">
+                    <div class="results" v-if="state.allSeries[genre.id] && state.allSeries[genre.id].length > 0">
+                        <!-- genre name -->
+                        <strong>{{ genre.name }}</strong>
+                        <!-- results as slides -->
+                        <Carousel :itemsToShow="6.5" :wrapAround="true" :transition="500" :itemsToScroll="5"
+                            snapAlign="start">
+                            <Slide v-for="(serie, index) in state.allSeries[genre.id]" :key="index">
+                                <ResultCard :title="serie.name" :original_title="serie.original_name"
+                                    :language="serie.original_language" :vote="serie.vote_average"
+                                    :imageUrl="serie.poster_path" :overview="serie.overview" :id="serie.id"
+                                    :type="serie.media_type" />
+                            </Slide>
+
+                            <template #addons>
+                                <Navigation />
+                                <Pagination />
+                            </template>
+                        </Carousel>
+                    </div>
 
 
                 </div>

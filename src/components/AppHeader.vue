@@ -2,6 +2,7 @@
 import { state } from "../state.js"
 export default {
     name: "AppHeader",
+    emits: ["reloadPage", "getFilmPage", "getSeriePage"],
     data() {
         return {
             state: state
@@ -15,7 +16,9 @@ export default {
             state.popularMovies = [],
                 state.popularSeries = [],
                 state.moviesList = [],
-                state.seriesList = []
+                state.seriesList = [],
+                state.allMovies = [],
+                state.allSeries = []
         }
     }
 }
@@ -33,7 +36,7 @@ export default {
                 <i class="fa-solid fa-house d-none" @click="$emit('reloadPage')"></i>
                 <ul class=" list-inline">
                     <li><a href="#" @click="$emit('reloadPage')">Home</a></li>
-                    <li><a href="#">Serie TV</a></li>
+                    <li><a href="#" @click="$emit('getSeriePage')">Serie TV</a></li>
                     <li><a href="#" @click="$emit('getFilmPage')">Film</a></li>
                     <li><a href="#">Aggiunti di recente</a></li>
                     <li><a href="#">La mia lista</a></li>
